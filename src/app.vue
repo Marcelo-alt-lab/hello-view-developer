@@ -1,12 +1,15 @@
 <script setup>
 import DeveloperRegistration from "./greetings/presentation/components/developer-registration.vue";
 import {ref} from "vue";
+
 import {Developer} from "./greetings/domain/model/developer.entity.js";
+import DeveloperCountShow from "./greetings/presentation/components/developer-count-show.vue";
+import DeveloperGreeting from "./greetings/presentation/components/developer-greeting.vue";
 
 const firstName = ref('');
 const lastName = ref('');
-const developerCount = ref('');
-const hasRegistered = ref('');
+const developerCount = ref(0);
+const hasRegistered = ref(false);
 
 function updateRegisteredDeveloperInfo(developer) {
   firstName.value = developer.firstName;
@@ -24,7 +27,7 @@ function resetRegisteredDeveloperInfo() {
 }
 function updateDeveloperCount(developer){
   const dev = new Developer(developer.firstName, developer.lastName);
-  if (dev.fullName() !== 'Unknown') {
+  if (dev.fullName !== 'Unknown') {
     developerCount.value++;
   }
 }
@@ -33,5 +36,9 @@ function updateDeveloperCount(developer){
 <template>
   <h1>Hello Vue Developer Application</h1>
 
-  <developer-registration @developer-registered="updateRegisteredDeveloperInfo" @registration-deferred="resetRegisteredDeveloperInfo" />
+  <developer-registration
+      @developer-registered="updateRegisteredDeveloperInfo"
+      @registration-deferred="resetRegisteredDeveloperInfo" />
+  <developer-greeting v-if="hasRegistered" :first-name="firstName" :last-name="lastName"/>
+  <developer-count-show :developer-count="developerCount" />
 </template>
